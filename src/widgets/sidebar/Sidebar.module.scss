@@ -1,51 +1,144 @@
 .sidebar {
-  background: #111827;
+  background: var(--erp-accent);
   color: #e5e7eb;
   display: flex;
   flex-direction: column;
-  padding: 20px 16px;
+  padding: 18px 14px;
+  height: 100vh;
 }
 
-.logo {
-  font-weight: 700;
-  font-size: 18px;
-  margin-bottom: 24px;
+.logoBlock {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
 }
 
-.nav {
+.logoShort {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: var(--erp-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 16px;
+  color: #f9fafb;
+}
+
+.logoText {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+}
+
+.logoTitle {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.logoSubtitle {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+.sections {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sectionTitle {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #9ca3af;
+  margin-bottom: 2px;
 }
 
 .link {
-  padding: 8px 10px;
-  border-radius: 8px;
-  font-size: 14px;
+  display: block;
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-size: 13px;
+  color: #e5e7eb;
   text-decoration: none;
-  color: inherit;
+  transition: background 0.15s ease, color 0.15s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.06);
+  }
 }
 
-.active {
-  background: #1f2937;
+.linkActive {
+  background: var(--erp-primary);
+  color: #ffffff;
 }
 
-.link:hover {
-  background: #1f2937;
+.footer {
+  margin-top: 12px;
+  border-top: 1px solid rgba(156, 163, 175, 0.35);
+  padding-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.userBlock {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.userAvatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: #111827;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.userName {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.userRole {
+  font-size: 11px;
+  color: #9ca3af;
 }
 
 .logout {
-  margin-top: 16px;
-  padding: 8px 10px;
+  margin-top: 4px;
+  width: 100%;
+  border-radius: 6px;
+  border: 1px solid #f97373;
+  padding: 6px 8px;
+  font-size: 13px;
   background: transparent;
-  border-radius: 8px;
-  border: 1px solid #4b5563;
-  color: #e5e7eb;
-  font-size: 14px;
+  color: #fecaca;
   cursor: pointer;
-}
+  text-align: center;
 
-.logout:hover {
-  background: #1f2937;
+  &:hover {
+    background: rgba(239, 68, 68, 0.18);
+  }
 }

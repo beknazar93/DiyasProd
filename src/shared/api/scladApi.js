@@ -1,7 +1,8 @@
+// src/shared/api/scladApi.js
+import httpClient from "./httpClient";
 
-import httpClient  from "./httpClient";
-
-// httpClient уже знает baseURL = "https://nurdan954.eu.pythonanywhere.com/api"
+// httpClient уже настроен на baseURL = "https://nurdan954.eu.pythonanywhere.com/api"
+// и автоматически подставляет Authorization: Bearer <access>
 
 export const scladApi = {
   // --- СЫРЬЁ ---
@@ -15,7 +16,8 @@ export const scladApi = {
   },
 
   createRawMaterialMovement(payload) {
-    // payload типично: { raw_material: 1, type: "incoming", quantity: 12.5 }
+    // ожидаем, что на бэке есть что-то вроде:
+    // { raw_material, type: "incoming" | "withdrawal", quantity }
     return httpClient.post("/sclad/raw-materials/movements/", payload);
   },
 
@@ -29,8 +31,9 @@ export const scladApi = {
     return httpClient.post("/sclad/finished-products/", payload);
   },
 
+  // PATCH — чтобы можно было отправлять только quantity
   updateFinishedProduct(id, payload) {
-    return httpClient.put(`/sclad/finished-products/${id}/`, payload);
+    return httpClient.patch(`/sclad/finished-products/${id}/`, payload);
   },
 
   deleteFinishedProduct(id) {

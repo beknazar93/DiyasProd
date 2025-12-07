@@ -1,0 +1,152 @@
+.rm-invoice {
+    margin-bottom: 20px;
+    padding: 18px 20px;
+    border-radius: 12px;
+    background: var(--erp-surface);
+    border: 1px solid var(--erp-border);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+
+    &__header {
+        margin-bottom: 12px;
+    }
+
+    &__title {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--erp-accent);
+    }
+
+    &__subtitle {
+        font-size: 13px;
+        color: var(--erp-text-muted);
+    }
+
+    &__form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    &__top {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 8px;
+    }
+
+    &__field {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        min-width: 160px;
+
+        &--wide {
+            flex: 1 1 240px;
+        }
+    }
+
+    &__label {
+        font-size: 12px;
+        color: var(--erp-text-muted);
+    }
+
+    &__date {
+        border-radius: 8px;
+        border: 1px solid var(--erp-border);
+        padding: 8px 10px;
+        font-size: 14px;
+    }
+
+    &__rows {
+        border-radius: 10px;
+        border: 1px solid var(--erp-border);
+        overflow: hidden;
+    }
+
+    &__row {
+        display: grid;
+        grid-template-columns: 36px 2fr 1fr 1fr 1fr 2fr 36px;
+        gap: 6px;
+        padding: 8px 10px;
+        align-items: center;
+        background: #f9fafb;
+
+        &--head {
+            background: #111827;
+            color: #f9fafb;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        &:not(&--head):nth-child(2n) {
+            background: #f3f4f6;
+        }
+    }
+
+    &__cell {
+        font-size: 13px;
+
+        &--index {
+            text-align: center;
+            font-weight: 600;
+        }
+
+        &--amount {
+            font-weight: 600;
+        }
+    }
+
+    &__select {
+        width: 100%;
+        border-radius: 8px;
+        border: 1px solid var(--erp-border);
+        padding: 8px 10px;
+        font-size: 14px;
+        background: #ffffff;
+    }
+
+    &__remove {
+        border: none;
+        background: transparent;
+        color: #ef4444;
+        cursor: pointer;
+        font-size: 16px;
+        padding: 2px 4px;
+    }
+
+    &__footer {
+        margin-top: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    &__add-row {
+        align-self: flex-start;
+        border-radius: 999px;
+        border: 1px dashed var(--erp-primary);
+        padding: 4px 10px;
+        font-size: 13px;
+        background: #fff;
+        color: var(--erp-primary);
+        cursor: pointer;
+
+        &:hover {
+            background: rgba(229, 57, 28, 0.06);
+        }
+    }
+
+    &__comment-block {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    &__textarea {
+        border-radius: 8px;
+        border: 1px solid var(--erp-border);
+        padding: 8px 10px;
+        font-size: 13px;
+        resize: vertical;
+    }
+}
