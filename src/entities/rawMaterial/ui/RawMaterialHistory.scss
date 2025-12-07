@@ -1,0 +1,103 @@
+/* История операций по складу сырья */
+
+.rawm-history {
+  margin-top: 16px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  &__header {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  &__title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #111827;
+  }
+
+  &__subtitle {
+    font-size: 13px;
+    color: #6b7280;
+  }
+
+  &__empty {
+    margin-top: 6px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    background: #f9fafb;
+    font-size: 14px;
+    color: #6b7280;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 6px;
+    max-height: 260px;
+    overflow: auto;
+  }
+
+  &__item {
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: 1px solid #e5e7eb;
+    background: #f9fafb;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__item-main {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__material {
+    font-size: 14px;
+    font-weight: 500;
+    color: #111827;
+  }
+
+  &__item-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 12px;
+    color: #4b5563;
+  }
+
+  &__meta {
+    &--muted {
+      color: #6b7280;
+    }
+  }
+
+  &__badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 500;
+
+    &--incoming {
+      background: #ecfdf3;
+      color: #15803d;
+    }
+
+    &--outgoing {
+      background: #fef2f2;
+      color: #b91c1c;
+    }
+  }
+}

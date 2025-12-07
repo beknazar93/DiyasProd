@@ -1,0 +1,61 @@
+.rawm-page {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 20px 24px;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.rawm-page__header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.rawm-page__title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #111827;
+}
+
+.rawm-page__subtitle {
+  font-size: 13px;
+  color: #6b7280;
+  max-width: 540px;
+}
+
+.rawm-page__summary {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #f9fafb;
+}
+
+.rawm-page__summary-item {
+  min-width: 150px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.rawm-page__summary-label {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.rawm-page__summary-value {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.rawm-page__summary-value--warning {
+  font-size: 16px;
+  font-weight: 600;
+  color: #b91c1c;
+}
