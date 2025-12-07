@@ -1,11 +1,28 @@
-import React from 'react';
-import styles from './FinishedProductPage.module.scss';
+import React, { useEffect } from "react";
+import MainLayout from "../../../widgets/layout/MainLayout";
+import "./FinishedProductPage.scss";
+
+import { useFinishedProductStore } from "../../../entities/finishedProduct/model/useFinishedProductStore";
+
+import FinishedProductTable from "../../../entities/finishedProduct/ui/FinishedProductTable";
 
 const FinishedProductPage = () => {
+  const { products, fetchProducts } = useFinishedProductStore();
+
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
+
   return (
-    <div className={styles.page}>
-      <h2 className={styles.title}>Склад готовой продукции</h2>
-      <p className={styles.text}>Здесь будет учёт готовых изделий, их отгрузка и резервы.</p>
+    <div className="finished-page">
+      <div className="finished-page__header">
+        <h2 className="finished-page__title">Склад готовой продукции</h2>
+        <p className="finished-page__subtitle">
+          Остатки готовой продукции, резервы и отгрузки.
+        </p>
+      </div>
+
+      <FinishedProductTable products={products} />
     </div>
   );
 };
