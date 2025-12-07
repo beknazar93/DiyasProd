@@ -1,44 +1,41 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
-import styles from './Sidebar.module.scss';
-import { useAuthStore } from '../../shared/store/useAuthStore';
+import React from "react";
+import { NavLink } from "react-router-dom";
+import { useAuthStore } from "../../shared/store/useAuthStore";
+import { SIDEBAR_ITEMS } from "./sidebarConfig";
+import "./Sidebar.scss";
 
 const Sidebar = () => {
-  const logout = useAuthStore((s) => s.logout);
+  const user = useAuthStore((s) => s.user);
+  const systemRole = user?.system_role;
 
-  const linkClass = ({ isActive }) =>
-    isActive ? `${styles.link} ${styles.active}` : styles.link;
+  const items = SIDEBAR_ITEMS.filter((item) => {
+    if (!item.roles || item.roles.length === 0) return true;
+    if (!systemRole) return false;
+    return item.roles.includes(systemRole);
+  });
 
   return (
-    <aside className={styles.sidebar}>
-      <div className={styles.logo}>ERP</div>
-      <nav className={styles.nav}>
-        <NavLink to="/" className={linkClass}>
-          Дашборд
-        </NavLink>
-        <NavLink to="/warehouse/raw" className={linkClass}>
-          Склад сырья
-        </NavLink>
-        <NavLink to="/warehouse/finished" className={linkClass}>
-          Готовая продукция
-        </NavLink>
-        <NavLink to="/production/stages" className={linkClass}>
-          Этапы производства
-        </NavLink>
-        <NavLink to="/sales" className={linkClass}>
-          Отдел продаж
-        </NavLink>
-        <NavLink to="/logistics" className={linkClass}>
-          Логистика
-        </NavLink>
-        <NavLink to="/analytics" className={linkClass}>
-          Аналитика
-        </NavLink>
-      </nav>
+    <aside className="sidebar">
+      <div className="sidebar__user">
+        <div className="sidebar__user-name">
+          {user?.username || "Нет имени"}
+        </div>
+        <div className="sidebar__user-role">{user?.system_role || "—"}</div>
+      </div>
 
-      <button className={styles.logout} onClick={logout}>
-        Выйти
-      </button>
+      <nav className="sidebar__nav">
+        {items.map((item) => (
+          <NavLink
+            key={item.id}
+            to={item.path}
+            className={({ isActive }) =>
+              "sidebar__link" + (isActive ? " sidebar__link--active" : "")
+            }
+          >
+            {item.label}
+          </NavLink>
+        ))}
+      </nav>
     </aside>
   );
 };

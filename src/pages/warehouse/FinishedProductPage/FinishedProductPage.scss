@@ -1,0 +1,27 @@
+.finished-page {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 20px 24px;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  &__header {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: #111827;
+  }
+
+  &__subtitle {
+    font-size: 14px;
+    color: #4b5563;
+  }
+}
