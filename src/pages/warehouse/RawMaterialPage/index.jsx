@@ -6,103 +6,42 @@ import { useRawMaterialStore } from "../../../entities/rawMaterial/model/useRawM
 import RawMaterialOperations from "../../../entities/rawMaterial/ui/RawMaterialOperations";
 import RawMaterialTable from "../../../entities/rawMaterial/ui/RawMaterialTable";
 import RawMaterialHistory from "../../../entities/rawMaterial/ui/RawMaterialHistory";
-import RawMaterialIncomingModal from "../../../entities/rawMaterial/ui/RawMaterialIncomingModal";
+import RawMaterialCreateModal from "../../../entities/rawMaterial/ui/RawMaterialCreateModal";
 import { useAuthStore } from "../../../shared/store/useAuthStore";
 
 const RawMaterialPage = () => {
-  const materials = useRawMaterialStore((s) => s.materials || []);
-  const movements =
-    useRawMaterialStore((s) => s.movements || s.entries || []) || [];
+  const {
+    materials,
+    movements,
+    fetchAll,
+    addIncoming,
+    getSummary,
+    getFilteredEntries,
+  } = useRawMaterialStore();
 
-  const fetchAll = useRawMaterialStore((s) => s.fetchAll);
-  const addIncoming = useRawMaterialStore((s) => s.addIncoming);
-  const withdrawByRecipe = useRawMaterialStore((s) => s.withdrawByRecipe);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   const authUser = useAuthStore((s) => s.user);
   const userName = authUser?.username || authUser?.email || "Неизвестно";
 
-  const [incomingModalOpen, setIncomingModalOpen] = useState(false);
-  const [incomingDraft, setIncomingDraft] = useState(null);
-
   useEffect(() => {
-    if (fetchAll) {
-      fetchAll();
-    }
+    fetchAll();
   }, [fetchAll]);
 
-  const totalPositions = materials.length;
-  const totalQuantity = materials.reduce(
-    (sum, m) => sum + Number(m.quantity ?? m.balance ?? 0),
-    0
-  );
-  const lowStockCount = materials.filter((m) => {
-    if (m.min_quantity == null) return false;
-    const qty = Number(m.quantity ?? m.balance ?? 0);
-    return qty <= Number(m.min_quantity);
-  }).length;
-
-  const summary = {
-    totalPositions,
-    totalQuantity,
-    lowStockCount,
-  };
-
-  const openIncomingModal = (draft) => {
-    setIncomingDraft(draft || {});
-    setIncomingModalOpen(true);
-  };
-
-  const closeIncomingModal = () => {
-    setIncomingModalOpen(false);
-  };
+  const summary = getSummary();
+  const entries = getFilteredEntries();
 
   const handleIncoming = async ({ materialId, weight, userName }) => {
-    if (!addIncoming || !materialId) return;
-
-    const qty = Number(weight) || 0;
-
-    try {
-      // оба варианта: (materialId, qty, userName) ИЛИ ({ ... })
-      if (addIncoming.length >= 2) {
-        await addIncoming(materialId, qty, userName);
-      } else {
-        await addIncoming({
-          material_id: materialId,
-          quantity: qty,
-          user_name: userName,
-          movement_type: "incoming",
-        });
-      }
-
-      fetchAll && fetchAll();
-    } catch (e) {
-      console.error("Ошибка при добавлении прихода сырья", e);
-    }
+    await addIncoming({ materialId, weight, userName });
   };
 
-  const handleWithdrawByRecipe = async ({ recipeId, multiplier, userName }) => {
-    if (!withdrawByRecipe || !recipeId) return;
-
-    const mul = Number(multiplier) || 1;
-
-    try {
-      if (withdrawByRecipe.length >= 2) {
-        await withdrawByRecipe(recipeId, mul, userName);
-      } else {
-        await withdrawByRecipe({
-          recipe_id: recipeId,
-          multiplier: mul,
-          user_name: userName,
-        });
-      }
-
-      fetchAll && fetchAll();
-    } catch (e) {
-      console.error("Ошибка при списании по рецепту", e);
-    }
+  const handleOpenCreateModal = () => {
+    setIsCreateModalOpen(true);
   };
 
-  const entries = Array.isArray(movements) ? movements : [];
+  const handleCloseCreateModal = () => {
+    setIsCreateModalOpen(false);
+  };
 
   return (
     <div className="rawm-page">
@@ -145,30 +84,21 @@ const RawMaterialPage = () => {
       <RawMaterialOperations
         materials={materials}
         recipes={[]}
-        onIncoming={handleIncoming} // запасной вариант
-        onOpenIncomingModal={openIncomingModal} // ⬅️ отсюда открываем модалку
-        onWithdrawByRecipe={handleWithdrawByRecipe}
+        onIncoming={handleIncoming}
+        onWithdrawByRecipe={() => {}}
         onSimulateWeight={() => 0}
         currentWeight={0}
         userName={userName}
+        onAddMaterial={handleOpenCreateModal}
       />
 
       <RawMaterialTable materials={materials} />
 
       <RawMaterialHistory entries={entries} />
 
-      <RawMaterialIncomingModal
-        open={incomingModalOpen}
-        onClose={closeIncomingModal}
-        materials={materials}
-        userName={userName}
-        defaultMaterialId={incomingDraft?.materialId}
-        defaultWeight={incomingDraft?.weight}
-        onConfirm={async (payload) => {
-          await handleIncoming(payload);
-          closeIncomingModal();
-        }}
-      />
+      {isCreateModalOpen && (
+        <RawMaterialCreateModal onClose={handleCloseCreateModal} />
+      )}
     </div>
   );
 };

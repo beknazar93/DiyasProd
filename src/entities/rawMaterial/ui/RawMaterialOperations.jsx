@@ -7,12 +7,12 @@ import "./RawMaterialOperations.scss";
 const RawMaterialOperations = ({
   materials,
   recipes,
-  onIncoming, // fallback / прямой вызов стора
-  onOpenIncomingModal, // модалка
-  onWithdrawByRecipe,
-  onSimulateWeight,
+  onIncoming, // приход сырья
+  onWithdrawByRecipe, // списание по рецепту (заглушка/позже)
+  onSimulateWeight, // весы
   currentWeight,
   userName,
+  onAddMaterial, // открыть модалку "Добавить материал"
 }) => {
   const safeMaterials = Array.isArray(materials) ? materials : [];
   const safeRecipes = Array.isArray(recipes) ? recipes : [];
@@ -25,7 +25,7 @@ const RawMaterialOperations = ({
   const [recipeId, setRecipeId] = useState("");
   const [recipeMultiplier, setRecipeMultiplier] = useState("1");
 
-  // если материалов нет, не мучаем пользователя — подставляем первый
+  // если есть материалы — по умолчанию выбираем первый
   useEffect(() => {
     if (!incomingMaterialId && safeMaterials.length > 0) {
       setIncomingMaterialId(String(safeMaterials[0].id));
@@ -44,6 +44,14 @@ const RawMaterialOperations = ({
   const handleIncomingSubmit = (e) => {
     if (e) e.preventDefault();
 
+    if (!safeMaterials.length) {
+      console.warn("Нет материалов для прихода — список пустой");
+      if (typeof onAddMaterial === "function") {
+        onAddMaterial();
+      }
+      return;
+    }
+
     if (!incomingMaterialId) {
       console.warn("Материал не выбран — приход не отправлен");
       return;
@@ -55,26 +63,8 @@ const RawMaterialOperations = ({
       userName,
     };
 
-    console.log("▶ Приход сырья — payload:", payload);
-
-    // 1) модалка (если есть)
-    if (typeof onOpenIncomingModal === "function") {
-      onOpenIncomingModal(payload);
-    }
-
-    // 2) прямой вызов стора (если передали onIncoming)
     if (typeof onIncoming === "function") {
-      try {
-        if (onIncoming.length >= 2) {
-          // сигнатура типа (materialId, weight, userName)
-          onIncoming(payload.materialId, payload.weight, payload.userName);
-        } else {
-          // сигнатура типа ({ ... })
-          onIncoming(payload);
-        }
-      } catch (err) {
-        console.error("Ошибка в onIncoming:", err);
-      }
+      onIncoming(payload);
     }
 
     setIncomingWeight("");
@@ -84,15 +74,12 @@ const RawMaterialOperations = ({
     e.preventDefault();
     if (!recipeId || typeof onWithdrawByRecipe !== "function") return;
 
-    const payload = {
+    onWithdrawByRecipe({
       recipeId,
       multiplier: Number(recipeMultiplier) || 1,
       userName,
-    };
+    });
 
-    console.log("▶ Списание по рецепту — payload:", payload);
-
-    onWithdrawByRecipe(payload);
     setRecipeMultiplier("1");
   };
 
@@ -100,21 +87,29 @@ const RawMaterialOperations = ({
 
   return (
     <div className="operations">
-      <div className="tabs">
-        <button
-          type="button"
-          className={`tab ${activeTab === "incoming" ? "tabActive" : ""}`}
-          onClick={() => setActiveTab("incoming")}
-        >
-          Приход сырья
-        </button>
-        <button
-          type="button"
-          className={`tab ${activeTab === "withdrawal" ? "tabActive" : ""}`}
-          onClick={() => setActiveTab("withdrawal")}
-        >
-          Списание по рецепту
-        </button>
+      <div className="operations__top">
+        <div className="tabs">
+          <button
+            type="button"
+            className={`tab ${activeTab === "incoming" ? "tabActive" : ""}`}
+            onClick={() => setActiveTab("incoming")}
+          >
+            Приход сырья
+          </button>
+          <button
+            type="button"
+            className={`tab ${activeTab === "withdrawal" ? "tabActive" : ""}`}
+            onClick={() => setActiveTab("withdrawal")}
+          >
+            Списание по рецепту
+          </button>
+        </div>
+
+        {typeof onAddMaterial === "function" && (
+          <Button type="button" onClick={onAddMaterial}>
+            + Добавить материал
+          </Button>
+        )}
       </div>
 
       {activeTab === "incoming" && (
@@ -159,10 +154,7 @@ const RawMaterialOperations = ({
           </div>
 
           <div className="actions">
-            {/* специально type="button", чтобы точно дергать наш handler */}
-            <Button type="button" onClick={handleIncomingSubmit}>
-              Добавить приход
-            </Button>
+            <Button type="submit">Добавить приход</Button>
           </div>
         </form>
       )}
