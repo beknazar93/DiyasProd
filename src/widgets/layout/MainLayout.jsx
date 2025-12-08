@@ -1,8 +1,9 @@
+// src/widgets/layout/MainLayout.jsx
 import React from "react";
 import { NavLink } from "react-router-dom";
 import "./MainLayout.scss";
 import { useAuthStore } from "../../shared/store/useAuthStore";
-
+import Logo from "../../img/logo.png";
 const NAV_ITEMS = [
   { to: "/", label: "Дашборд" },
   { to: "/warehouse/raw", label: "Склад сырья" },
@@ -24,7 +25,7 @@ const MainLayout = ({ children }) => {
     <div className="main-layout">
       <aside className="main-layout__sidebar">
         <div className="main-layout__logo">
-          <div className="main-layout__logo-mark">DP</div>
+          <img className="logo" src={Logo} alt="logo" />
           <div className="main-layout__logo-text">
             <div className="main-layout__logo-title">Diyas Production</div>
             <div className="main-layout__logo-subtitle">
@@ -100,7 +101,9 @@ const MainLayout = ({ children }) => {
                   {user.username || user.email}
                 </div>
                 {user.system_role && (
-                  <div className="main-layout__user-role">{user.system_role}</div>
+                  <div className="main-layout__user-role">
+                    {user.system_role}
+                  </div>
                 )}
               </div>
             </div>
