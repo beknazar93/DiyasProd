@@ -54,9 +54,9 @@ const RawMaterialTable = ({ materials }) => {
                 <tr key={m.id || m.name}>
                   <td>{m.name}</td>
                   <td>{m.group || m.category || "—"}</td>
-                  <td>{unit}</td>
-                  <td>{current}</td>
-                  <td>{min || "—"}</td>
+                  <td>{m.unit}</td>
+                  <td>{m.currentStock}</td>
+                  <td>{m.minStock || "—"}</td>
                   <td>
                     <span
                       className={
