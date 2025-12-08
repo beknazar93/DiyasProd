@@ -1,42 +1,45 @@
 // src/shared/api/scladApi.js
 import httpClient from "./httpClient";
 
-// httpClient уже настроен на baseURL = "https://nurdan954.eu.pythonanywhere.com/api"
-// и автоматически подставляет Authorization: Bearer <access>
-
+// ВСЕ запросы к /sclad/* вынесены сюда
 export const scladApi = {
-  // --- СЫРЬЁ ---
-
-  getRawMaterials(params) {
-    return httpClient.get("/sclad/raw-materials/", { params });
+  // ===== СЫРЬЁ =====
+  async getRawMaterials() {
+    const res = await httpClient.get("/sclad/raw-materials/");
+    return res.data;
   },
 
-  getRawMaterialMovements(params) {
-    return httpClient.get("/sclad/raw-materials/movements/", { params });
+  async createRawMaterial(payload) {
+    // payload:
+    // {
+    //   name: "Гранула ПСБ-С35",
+    //   material_type: "granules",      // один из [granules, color, additive, package, other]
+    //   unit: "kg",                     // один из [kg, t, l, pcs]
+    //   min_stock: "0",
+    //   current_stock: "0"
+    // }
+    const res = await httpClient.post("/sclad/raw-materials/", payload);
+    return res.data;
   },
 
-  createRawMaterialMovement(payload) {
-    // ожидаем, что на бэке есть что-то вроде:
-    // { raw_material, type: "incoming" | "withdrawal", quantity }
-    return httpClient.post("/sclad/raw-materials/movements/", payload);
+  // ===== ДВИЖЕНИЯ СЫРЬЯ =====
+  async getRawMaterialMovements() {
+    const res = await httpClient.get("/sclad/raw-materials/movements/");
+    return res.data;
   },
 
-  // --- ГОТОВАЯ ПРОДУКЦИЯ ---
+  async createRawMaterialMovement({ material, operation_type, quantity, document }) {
+    const body = {
+      material,                        // integer (id сырья)
+      operation_type,                  // 'in' | 'out'
+      quantity: String(quantity),      // decimal как строка
+    };
 
-  getFinishedProducts(params) {
-    return httpClient.get("/sclad/finished-products/", { params });
-  },
+    if (document) {
+      body.document = document.slice(0, 255);
+    }
 
-  createFinishedProduct(payload) {
-    return httpClient.post("/sclad/finished-products/", payload);
-  },
-
-  // PATCH — чтобы можно было отправлять только quantity
-  updateFinishedProduct(id, payload) {
-    return httpClient.patch(`/sclad/finished-products/${id}/`, payload);
-  },
-
-  deleteFinishedProduct(id) {
-    return httpClient.delete(`/sclad/finished-products/${id}/`);
+    const res = await httpClient.post("/sclad/raw-materials/movements/", body);
+    return res.data;
   },
 };
