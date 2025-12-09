@@ -1,22 +1,21 @@
-// src/entities/rawMaterial/ui/RawMaterialCreateModal.jsx
 import React, { useState } from "react";
 import "./RawMaterialCreateModal.scss";
-import { useRawMaterialStore } from "../model/useRawMaterialStore";
 import Input from "../../../shared/ui/Input/Input";
 import Button from "../../../shared/ui/Button/Button";
+import { useRawMaterialStore } from "../model/useRawMaterialStore";
 
-const materialTypeOptions = [
-  { value: "granules", label: "Гранулы" },
+const MATERIAL_TYPE_OPTIONS = [
+  { value: "granules", label: "ПВХ гранулы" },
   { value: "color", label: "Краситель" },
   { value: "additive", label: "Добавка" },
   { value: "package", label: "Упаковка" },
   { value: "other", label: "Другое" },
 ];
 
-const unitOptions = [
+const UNIT_OPTIONS = [
   { value: "kg", label: "кг" },
-  { value: "t", label: "тонны" },
-  { value: "l", label: "литры" },
+  { value: "t", label: "т" },
+  { value: "l", label: "л" },
   { value: "pcs", label: "шт" },
 ];
 
@@ -26,39 +25,39 @@ const RawMaterialCreateModal = ({ onClose }) => {
   const [name, setName] = useState("");
   const [materialType, setMaterialType] = useState("granules");
   const [unit, setUnit] = useState("kg");
-  const [minStock, setMinStock] = useState("");
-  const [currentStock, setCurrentStock] = useState("");
-
-  const [submitting, setSubmitting] = useState(false);
-  const [formError, setFormError] = useState("");
+  const [quantity, setQuantity] = useState("0");
+  const [minStock, setMinStock] = useState("0");
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setFormError("");
+    setError("");
 
     if (!name.trim()) {
-      setFormError("Заполни наименование.");
+      setError("Укажите название материала");
       return;
     }
 
-    const payload = {
-      name: name.trim(),
-      material_type: materialType, // ← строго один из enum
-      unit: unit, // ← строго один из enum
-      min_stock: String(minStock || "0"),
-      current_stock: String(currentStock || "0"),
-    };
-
     try {
-      setSubmitting(true);
-      await createMaterial(payload);
-      setSubmitting(false);
-      if (typeof onClose === "function") onClose();
-    } catch (_e) {
-      setSubmitting(false);
-      setFormError(
-        "Не удалось создать материал. Проверь, что тип и ед. измерения выбраны корректно."
+      setSaving(true);
+
+      await createMaterial({
+        name: name.trim(),
+        material_type: materialType,
+        unit,
+        min_stock: minStock || "0",
+        current_stock: quantity || "0",
+      });
+
+      onClose();
+    } catch (err) {
+      console.error("createMaterial error:", err);
+      setError(
+        "Не удалось создать материал. Проверьте значения и попробуйте ещё раз."
       );
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -66,82 +65,87 @@ const RawMaterialCreateModal = ({ onClose }) => {
     <div className="rawm-modal">
       <div className="rawm-modal__backdrop" onClick={onClose} />
 
-      <div className="rawm-modal__content">
-        <div className="rawm-modal__header">
-          <h3 className="rawm-modal__title">Добавить новый материал</h3>
-        </div>
+      <div className="rawm-modal__window">
+        <h2 className="rawm-modal__title">Добавить материал</h2>
 
         <form className="rawm-modal__form" onSubmit={handleSubmit}>
-          <div className="rawm-modal__field">
-            <label className="rawm-modal__label">Наименование</label>
+          <label className="rawm-modal__field">
+            <span className="rawm-modal__label">Название</span>
             <Input
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="Например, Гранула ПСБ-С35"
+              placeholder="Например, ПВХ гранулы белые"
             />
-          </div>
+          </label>
 
-          <div className="rawm-modal__row">
-            <div className="rawm-modal__field">
-              <label className="rawm-modal__label">Тип сырья</label>
-              <select
-                className="rawm-modal__select"
-                value={materialType}
-                onChange={(e) => setMaterialType(e.target.value)}
-              >
-                {materialTypeOptions.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.label} ({opt.value})
-                  </option>
-                ))}
-              </select>
-            </div>
+          <label className="rawm-modal__field">
+            <span className="rawm-modal__label">Тип</span>
+            <select
+              className="rawm-modal__select"
+              value={materialType}
+              onChange={(e) => setMaterialType(e.target.value)}
+            >
+              {MATERIAL_TYPE_OPTIONS.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+          </label>
 
-            <div className="rawm-modal__field">
-              <label className="rawm-modal__label">Ед. измерения</label>
+          <div className="rawm-modal__grid">
+            <label className="rawm-modal__field">
+              <span className="rawm-modal__label">Количество</span>
+              <Input
+                type="number"
+                min="0"
+                step="0.01"
+                value={quantity}
+                onChange={(e) => setQuantity(e.target.value)}
+              />
+            </label>
+
+            <label className="rawm-modal__field">
+              <span className="rawm-modal__label">Ед. измерения</span>
               <select
                 className="rawm-modal__select"
                 value={unit}
                 onChange={(e) => setUnit(e.target.value)}
               >
-                {unitOptions.map((opt) => (
+                {UNIT_OPTIONS.map((opt) => (
                   <option key={opt.value} value={opt.value}>
-                    {opt.label} ({opt.value})
+                    {opt.label}
                   </option>
                 ))}
               </select>
-            </div>
+            </label>
           </div>
 
-          <div className="rawm-modal__row">
-            <div className="rawm-modal__field">
-              <label className="rawm-modal__label">Минимальный остаток</label>
-              <Input
-                value={minStock}
-                onChange={(e) => setMinStock(e.target.value)}
-                placeholder="0"
-              />
-            </div>
+          <label className="rawm-modal__field">
+            <span className="rawm-modal__label">Минимальный остаток</span>
+            <Input
+              type="number"
+              min="0"
+              step="0.01"
+              value={minStock}
+              onChange={(e) => setMinStock(e.target.value)}
+            />
+          </label>
 
-            <div className="rawm-modal__field">
-              <label className="rawm-modal__label">Текущий остаток</label>
-              <Input
-                value={currentStock}
-                onChange={(e) => setCurrentStock(e.target.value)}
-                placeholder="0"
-              />
-            </div>
-          </div>
-
-          {formError && <div className="rawm-modal__error">{formError}</div>}
+          {error && <div className="rawm-modal__error">{error}</div>}
 
           <div className="rawm-modal__actions">
-            <Button type="button" variant="secondary" onClick={onClose}>
+            <Button type="submit" disabled={saving}>
+              {saving ? "Сохранение..." : "Добавить"}
+            </Button>
+            <button
+              type="button"
+              className="rawm-modal__btn-secondary"
+              onClick={onClose}
+              disabled={saving}
+            >
               Отмена
-            </Button>
-            <Button type="submit" disabled={submitting}>
-              {submitting ? "Сохраняем..." : "Создать материал"}
-            </Button>
+            </button>
           </div>
         </form>
       </div>
