@@ -1,0 +1,102 @@
+.rawm-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rawm-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.45);
+}
+
+.rawm-modal__window {
+    position: relative;
+    z-index: 41;
+    width: 100%;
+    max-width: 520px;
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 24px 24px 20px;
+    box-shadow: 0 24px 60px rgba(15, 23, 42, 0.35);
+}
+
+.rawm-modal__title {
+    margin: 0 0 16px;
+    font-size: 20px;
+    font-weight: 600;
+    color: #111827;
+}
+
+.rawm-modal__form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.rawm-modal__field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.rawm-modal__label {
+    font-size: 13px;
+    color: #4b5563;
+}
+
+.rawm-modal__select {
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid #d1d5db;
+    padding: 9px 11px;
+    font-size: 14px;
+    background: #ffffff;
+}
+
+.rawm-modal__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.rawm-modal__error {
+    margin-top: 4px;
+    font-size: 13px;
+    color: #b91c1c;
+}
+
+.rawm-modal__actions {
+    margin-top: 12px;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.rawm-modal__btn-secondary {
+    border-radius: 999px;
+    border: none;
+    padding: 9px 18px;
+    font-size: 14px;
+    background: #e5e7eb;
+    color: #111827;
+    cursor: pointer;
+}
+
+.rawm-modal__btn-secondary:hover {
+    background: #d1d5db;
+}
+
+@media (max-width: 640px) {
+    .rawm-modal__window {
+        margin: 0 12px;
+        padding: 20px 16px 16px;
+    }
+
+    .rawm-modal__grid {
+        grid-template-columns: 1fr;
+    }
+}
