@@ -1,91 +1,79 @@
-/* Таблица склада сырья */
-
 .rawm-table {
-  margin-top: 16px;
+  width: 100%;
   border-radius: 12px;
-  border: 1px solid #e5e7eb;
-  background: #ffffff;
-  padding: 12px 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  overflow: hidden;
+}
 
-  &__header-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 12px;
-  }
+.rawm-table__inner {
+  width: 100%;
+  border-collapse: collapse;
+}
 
-  &__title {
-    font-size: 16px;
-    font-weight: 600;
-    color: #111827;
-    margin-bottom: 2px;
-  }
+.rawm-table__inner thead {
+  background: #f9fafb;
+}
 
-  &__subtitle {
-    font-size: 13px;
-    color: #6b7280;
-  }
+.rawm-table__inner th,
+.rawm-table__inner td {
+  padding: 10px 16px;
+  font-size: 14px;
+  text-align: left;
+  border-top: 1px solid #f3f4f6;
+}
 
-  &__empty {
-    padding: 16px;
-    border-radius: 10px;
-    background: #f9fafb;
-    font-size: 14px;
-    color: #6b7280;
-  }
+.rawm-table__inner th {
+  font-size: 13px;
+  font-weight: 600;
+  color: #6b7280;
+  border-top: none;
+}
 
-  &__scroll {
-    max-height: 360px;
-    overflow: auto;
-    border-radius: 10px;
-    border: 1px solid #e5e7eb;
-  }
+.rawm-table__inner tbody tr:nth-child(even) {
+  background: #fbfbfb;
+}
 
-  &__table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13px;
+.rawm-table__inner tbody tr:hover {
+  background: #f3f4ff;
+}
 
-    th,
-    td {
-      padding: 8px 10px;
-      text-align: left;
-      border-bottom: 1px solid #e5e7eb;
-      white-space: nowrap;
-    }
+.rawm-table__status {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  background: #ecfdf3;
+  color: #15803d;
+}
 
-    th {
-      font-weight: 600;
-      font-size: 12px;
-      color: #6b7280;
-      background: #f9fafb;
-      position: sticky;
-      top: 0;
-      z-index: 1;
-    }
+.rawm-table__status--low {
+  background: #fef2f2;
+  color: #b91c1c;
+}
 
-    tr:last-child td {
-      border-bottom: none;
-    }
-  }
+.rawm-table__link {
+  border: none;
+  background: none;
+  padding: 0;
+  font-size: 13px;
+  color: #2563eb;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
 
-  &__status {
-    padding: 2px 8px;
-    border-radius: 999px;
-    font-size: 11px;
-    font-weight: 500;
-  }
+.rawm-table__link:hover {
+  text-decoration: underline;
+}
 
-  &__status--ok {
-    background: #ecfdf3;
-    color: #15803d;
-  }
+/* пустое состояние */
+.rawm-table--empty {
+  padding: 24px 0;
+}
 
-  &__status--low {
-    background: #fef2f2;
-    color: #b91c1c;
-  }
+.rawm-table__empty {
+  margin: 0;
+  font-size: 14px;
+  color: #6b7280;
 }
