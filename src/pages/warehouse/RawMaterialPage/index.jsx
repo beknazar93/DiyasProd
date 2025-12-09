@@ -1,4 +1,3 @@
-// src/pages/warehouse/RawMaterialPage/index.jsx
 import React, { useEffect, useState } from "react";
 import "./RawMaterialPage.scss";
 
@@ -10,14 +9,8 @@ import RawMaterialCreateModal from "../../../entities/rawMaterial/ui/RawMaterial
 import { useAuthStore } from "../../../shared/store/useAuthStore";
 
 const RawMaterialPage = () => {
-  const {
-    materials,
-    movements,
-    fetchAll,
-    addIncoming,
-    getSummary,
-    getFilteredEntries,
-  } = useRawMaterialStore();
+  const { materials, movements, fetchAll, addIncoming, getSummary } =
+    useRawMaterialStore();
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
@@ -29,72 +22,107 @@ const RawMaterialPage = () => {
   }, [fetchAll]);
 
   const summary = getSummary();
-  const entries = getFilteredEntries();
+  const entries = Array.isArray(movements) ? movements : [];
 
   const handleIncoming = async ({ materialId, weight, userName }) => {
     await addIncoming({ materialId, weight, userName });
   };
 
-  const handleOpenCreateModal = () => {
-    setIsCreateModalOpen(true);
-  };
-
-  const handleCloseCreateModal = () => {
-    setIsCreateModalOpen(false);
-  };
+  const handleOpenCreateModal = () => setIsCreateModalOpen(true);
+  const handleCloseCreateModal = () => setIsCreateModalOpen(false);
 
   return (
     <div className="rawm-page">
-      <div className="rawm-page__header">
-        <div>
-          <h2 className="rawm-page__title">Склад сырья</h2>
+      {/* верх: заголовок + кнопка */}
+      <div className="rawm-page__top">
+        <div className="rawm-page__top-left">
+          <h1 className="rawm-page__title">Учёт сырья и материалов</h1>
           <p className="rawm-page__subtitle">
-            Управляйте остатками сырья, поступлениями и списаниями.
+            Взвешивание и управление остатками.
           </p>
         </div>
 
-        <div className="rawm-page__summary">
-          <div className="rawm-page__summary-item">
-            <span className="rawm-page__summary-label">Позиций</span>
-            <span className="rawm-page__summary-value">
-              {summary.totalPositions}
+        <button
+          type="button"
+          className="rawm-page__add-btn"
+          onClick={handleOpenCreateModal}
+        >
+          <span className="rawm-page__add-btn-icon">+</span>
+          <span>Добавить материал</span>
+        </button>
+      </div>
+
+      {/* карточки-статы */}
+      <div className="rawm-page__stats">
+        <div className="rawm-page__stat-card">
+          <div className="rawm-page__stat-icon rawm-page__stat-icon--blue">
+            <span role="img" aria-label="cube">
+              📦
             </span>
           </div>
-          <div className="rawm-page__summary-item">
-            <span className="rawm-page__summary-label">Общий остаток, кг</span>
-            <span className="rawm-page__summary-value">
-              {summary.totalQuantity.toLocaleString("ru-RU")}
+          <div className="rawm-page__stat-body">
+            <div className="rawm-page__stat-label">Всего материалов</div>
+            <div className="rawm-page__stat-value">
+              {summary.totalPositions || 0}
+            </div>
+          </div>
+        </div>
+
+        <div className="rawm-page__stat-card">
+          <div className="rawm-page__stat-icon rawm-page__stat-icon--red">
+            <span role="img" aria-label="low">
+              📉
             </span>
           </div>
-          <div className="rawm-page__summary-item">
-            <span className="rawm-page__summary-label">Требуют внимания</span>
-            <span
-              className={
-                summary.lowStockCount > 0
-                  ? "rawm-page__summary-value rawm-page__summary-value--warning"
-                  : "rawm-page__summary-value"
-              }
-            >
-              {summary.lowStockCount}
+          <div className="rawm-page__stat-body">
+            <div className="rawm-page__stat-label">Низкие остатки</div>
+            <div className="rawm-page__stat-value">
+              {summary.lowStockCount || 0}
+            </div>
+          </div>
+        </div>
+
+        <div className="rawm-page__stat-card">
+          <div className="rawm-page__stat-icon rawm-page__stat-icon--green">
+            <span role="img" aria-label="scale">
+              ⚖️
             </span>
+          </div>
+          <div className="rawm-page__stat-body">
+            <div className="rawm-page__stat-label">Общий вес на складе</div>
+            <div className="rawm-page__stat-value">
+              {(summary.totalQuantity || 0).toLocaleString("ru-RU")} кг
+            </div>
           </div>
         </div>
       </div>
 
-      <RawMaterialOperations
-        materials={materials}
-        recipes={[]}
-        onIncoming={handleIncoming}
-        onWithdrawByRecipe={() => {}}
-        onSimulateWeight={() => 0}
-        currentWeight={0}
-        userName={userName}
-        onAddMaterial={handleOpenCreateModal}
-      />
+      {/* список + операции + история */}
+      <div className="rawm-page__content">
+        <section className="rawm-page__card rawm-page__card--full">
+          <div className="rawm-page__card-header">
+            <h2 className="rawm-page__section-title">Список материалов</h2>
+          </div>
+          <RawMaterialTable materials={materials} />
+        </section>
 
-      <RawMaterialTable materials={materials} />
+        <section className="rawm-page__card">
+          <RawMaterialOperations
+            materials={materials}
+            recipes={[]}
+            onIncoming={handleIncoming}
+            onWithdrawByRecipe={() => {}}
+            onSimulateWeight={() => 0}
+            currentWeight={0}
+            userName={userName}
+            onAddMaterial={handleOpenCreateModal}
+          />
+        </section>
 
-      <RawMaterialHistory entries={entries} />
+        <section className="rawm-page__card">
+          <RawMaterialHistory entries={entries} />
+        </section>
+      </div>
 
       {isCreateModalOpen && (
         <RawMaterialCreateModal onClose={handleCloseCreateModal} />
