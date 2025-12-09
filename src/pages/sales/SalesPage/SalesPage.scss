@@ -1,0 +1,173 @@
+// src/pages/sales/SalesPage.module.scss
+
+// Түс өзгөрмөлөрү
+$color-primary: #007bff;   // Көк
+$color-success: #28a745;   // Жашыл
+$color-background: #f8f9fa; // Фондун ачык боз түсү
+$color-border: #e9ecef;     // Чек ара түсү
+$color-text-secondary: #6c757d; // Кошумча текст
+
+.salesPage {
+    padding: 20px;
+    background-color: $color-background; 
+    font-family: Arial, sans-serif;
+}
+
+/* 1. Башкы аталыш жана баскыч */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+
+    .titleContainer h1 {
+        font-size: 1.5rem;
+        margin: 0 0 5px 0;
+    }
+    .titleContainer p {
+        font-size: 0.9rem;
+        color: $color-text-secondary;
+        margin: 0;
+    }
+}
+
+/* "Оформить продажу" баскычы (primary-icon) */
+.primary-icon { 
+    background-color: $color-primary;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    
+    &:hover {
+        background-color: #0056b3;
+    }
+}
+
+/* 2. Статистикалык карточкалар (Stats Grid) */
+.statsGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.statCard {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    border: 1px solid $color-border;
+
+    .statTitle {
+        font-size: 0.9rem;
+        color: $color-text-secondary;
+    }
+    .statValue {
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+    .statIcon {
+        font-size: 1.5rem;
+        padding: 10px;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+/* 3. Жеткиликтүү продукция секциясы */
+.availableSection {
+    margin-bottom: 30px;
+    h2 {
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+    }
+}
+
+.productCards {
+    display: flex;
+    gap: 20px;
+}
+
+.productCard {
+    flex: 1;
+    background-color: white;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid $color-border;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+
+    h3 {
+        font-size: 1rem;
+        margin-top: 0;
+        margin-bottom: 10px;
+        border-bottom: 1px dashed $color-border;
+        padding-bottom: 5px;
+        font-weight: 600;
+    }
+
+    p {
+        font-size: 0.9rem;
+        margin: 3px 0;
+    }
+}
+
+/* 4. Сатуу тарыхы секциясы (TABLE) */
+.historySection {
+    h2 {
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+    }
+}
+
+.salesHistoryTable {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+    th, td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid $color-border;
+        font-size: 0.95rem;
+        vertical-align: top;
+    }
+
+    th {
+        background-color: $color-background;
+        font-weight: 600;
+        color: #555;
+    }
+
+    /* Төлөм статусунун стилдери */
+    .paymentStatusPaid {
+        background-color: #E6F8E8; // Ачык жашыл фон
+        color: $color-success;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        display: inline-block;
+    }
+
+    .paymentMethod {
+        font-size: 0.85rem;
+        color: $color-text-secondary;
+        margin-top: 5px;
+    }
+}
